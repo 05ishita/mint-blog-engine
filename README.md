@@ -4,7 +4,7 @@ A modern responsive blog engine built as part of the Web Development Internship 
 
 ## 🚀 Live Demo
 
-Coming soon
+https://mint-blog-engine.vercel.app/
 
 ## 📌 Features
 
