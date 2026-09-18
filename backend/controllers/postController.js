@@ -1,16 +1,63 @@
 const Post = require("../models/Post");
 
-// GET all posts
+// GET all posts with search + pagination
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const {
+      search = "",
+      category = "",
+      page = 1,
+      limit = 6,
+    } = req.query;
+
+    const currentPage = Math.max(parseInt(page) || 1, 1);
+    const postsPerPage = Math.max(parseInt(limit) || 6, 1);
+    const skip = (currentPage - 1) * postsPerPage;
+
+    const filter = {};
+
+    // Search in title, content, markdown and author
+    if (search.trim()) {
+      const searchRegex = new RegExp(search.trim(), "i");
+
+      filter.$or = [
+        { title: searchRegex },
+        { content: searchRegex },
+        { markdown: searchRegex },
+        { author: searchRegex },
+      ];
+    }
+
+    // Category filter
+    if (category.trim() && category !== "All") {
+      filter.category = category;
+    }
+
+    const totalPosts = await Post.countDocuments(filter);
+
+    const posts = await Post.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(postsPerPage);
+
+    const totalPages = Math.ceil(totalPosts / postsPerPage);
 
     res.status(200).json({
       success: true,
       count: posts.length,
       data: posts,
+      pagination: {
+        currentPage,
+        postsPerPage,
+        totalPosts,
+        totalPages,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1,
+      },
     });
   } catch (error) {
+    console.error("Error fetching posts:", error);
+
     res.status(500).json({
       success: false,
       message: "Failed to fetch posts",
@@ -46,7 +93,14 @@ const getPostById = async (req, res) => {
 // CREATE post
 const createPost = async (req, res) => {
   try {
-    const { title, category, author, date, content, markdown } = req.body;
+    const {
+      title,
+      category,
+      author,
+      date,
+      content,
+      markdown,
+    } = req.body;
 
     if (!title || !category || !author || !date || !content || !markdown) {
       return res.status(400).json({
@@ -70,10 +124,11 @@ const createPost = async (req, res) => {
       data: post,
     });
   } catch (error) {
+    console.error("Error creating post:", error);
+
     res.status(400).json({
       success: false,
-      message: "Failed to create post",
-      error: error.message,
+      message: error.message,
     });
   }
 };
@@ -81,7 +136,14 @@ const createPost = async (req, res) => {
 // UPDATE post
 const updatePost = async (req, res) => {
   try {
-    const { title, category, author, date, content, markdown } = req.body;
+    const {
+      title,
+      category,
+      author,
+      date,
+      content,
+      markdown,
+    } = req.body;
 
     if (!title || !category || !author || !date || !content || !markdown) {
       return res.status(400).json({
@@ -119,10 +181,11 @@ const updatePost = async (req, res) => {
       data: post,
     });
   } catch (error) {
+    console.error("Error updating post:", error);
+
     res.status(400).json({
       success: false,
-      message: "Failed to update post",
-      error: error.message,
+      message: error.message,
     });
   }
 };
@@ -146,7 +209,7 @@ const deletePost = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: "Failed to delete post",
+      message: "Invalid post ID",
     });
   }
 };

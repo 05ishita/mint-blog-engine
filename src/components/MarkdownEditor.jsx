@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-const API_URL = "http://localhost:5000/api/posts";
+const API_URL =
+  "https://mint-blog-engine-backend.onrender.com/api/posts";
 
 function MarkdownEditor({ onPostCreated }) {
   const [formData, setFormData] = useState({
@@ -25,12 +26,12 @@ function MarkdownEditor({ onPostCreated }) {
     e.preventDefault();
 
     if (
-      !formData.title ||
+      !formData.title.trim() ||
       !formData.category ||
-      !formData.author ||
+      !formData.author.trim() ||
       !formData.date ||
-      !formData.content ||
-      !formData.markdown
+      !formData.content.trim() ||
+      !formData.markdown.trim()
     ) {
       alert("Please fill all fields.");
       return;
@@ -46,7 +47,13 @@ function MarkdownEditor({ onPostCreated }) {
         },
         body: JSON.stringify({
           ...formData,
-          date: new Date(formData.date).toLocaleDateString("en-US", {
+          title: formData.title.trim(),
+          author: formData.author.trim(),
+          content: formData.content.trim(),
+          markdown: formData.markdown.trim(),
+          date: new Date(
+            formData.date
+          ).toLocaleDateString("en-US", {
             month: "long",
             day: "numeric",
             year: "numeric",
@@ -57,7 +64,9 @@ function MarkdownEditor({ onPostCreated }) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to create post");
+        throw new Error(
+          result.message || "Failed to create post"
+        );
       }
 
       alert("Post created successfully!");
@@ -76,14 +85,16 @@ function MarkdownEditor({ onPostCreated }) {
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to create post.");
+      alert(
+        error.message || "Failed to create post."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="blog-section">
+    <section className="blog-section" id="editor">
       <div className="container">
         <div className="section-heading">
           <span>CREATE</span>
@@ -119,12 +130,18 @@ function MarkdownEditor({ onPostCreated }) {
             onChange={handleChange}
             style={inputStyle}
           >
-            <option value="Development">Development</option>
-            <option value="JavaScript">JavaScript</option>
+            <option value="Development">
+              Development
+            </option>
+            <option value="JavaScript">
+              JavaScript
+            </option>
             <option value="Design">Design</option>
             <option value="Backend">Backend</option>
             <option value="Tools">Tools</option>
-            <option value="Technology">Technology</option>
+            <option value="Technology">
+              Technology
+            </option>
           </select>
 
           <input
@@ -168,10 +185,14 @@ function MarkdownEditor({ onPostCreated }) {
             className="hero-btn"
             style={{
               border: "none",
-              cursor: loading ? "not-allowed" : "pointer",
+              cursor: loading
+                ? "not-allowed"
+                : "pointer",
             }}
           >
-            {loading ? "Publishing..." : "Publish Article"}
+            {loading
+              ? "Publishing..."
+              : "Publish Article"}
           </button>
         </form>
       </div>
