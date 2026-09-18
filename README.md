@@ -1,54 +1,80 @@
-# Mint Technologies - Dynamic Blog Engine
+# Mint Blog Engine
 
-A modern responsive blog engine built as part of the Web Development Internship at Mint Technologies.
+A modern full-stack blog engine built as part of the Mint Technologies Web Development Internship.
 
-## 🚀 Live Demo
+The project started as a React-based blog interface and was upgraded with a real Express.js backend and MongoDB database.
 
+## Live Project
+
+Frontend:
 https://mint-blog-engine.vercel.app/
 
-## 📌 Features
+GitHub:
+https://github.com/05ishita/mint-blog-engine
 
-- Dynamic blog article listing
-- Real-time keyword search
-- Category-based filtering
-- Article reading time calculator
-- Bookmark articles using localStorage
-- Markdown editor with live preview
-- Read Article modal
-- Dark/Light theme switcher
-- Responsive design for desktop, tablet and mobile
-- Clean and modern user interface
+## Tech Stack
 
-## 🛠️ Technologies Used
-
+### Frontend
 - React.js
 - Vite
 - JavaScript
-- HTML5
-- CSS3
 - React Markdown
+- CSS
 - LocalStorage
-- Git & GitHub
 
-## 📂 Project Structure
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- REST API
+- CORS
+- dotenv
+
+## Features
+
+- Responsive blog interface
+- Search articles
+- Filter articles by category
+- Bookmark articles
+- Read articles in a modal
+- Markdown article rendering
+- Create new articles
+- Edit existing articles
+- Delete articles
+- Real MongoDB database
+- RESTful backend API
+- Basic input validation
+- Loading and error states
+
+## Project Structure
 
 ```text
-mint-blog-engine
+mint-blog-engine/
 │
-├── src
-│   ├── components
-│   │   ├── Header.jsx
-│   │   ├── BlogCard.jsx
-│   │   └── MarkdownEditor.jsx
-│   │
-│   ├── data
-│   │   └── posts.js
-│   │
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   └── postController.js
+│   ├── models/
+│   │   └── Post.js
+│   ├── routes/
+│   │   └── postRoutes.js
+│   ├── .env
+│   ├── seed.js
+│   ├── server.js
+│   └── package.json
+│
+├── src/
+│   ├── components/
+│   ├── data/
+│   ├── assets/
 │   ├── App.jsx
 │   ├── App.css
 │   ├── index.css
 │   └── main.jsx
 │
-├── public
 ├── package.json
+├── vite.config.js
 └── README.md
