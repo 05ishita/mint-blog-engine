@@ -7,7 +7,8 @@ import MarkdownEditor from "./components/MarkdownEditor";
 
 import "./App.css";
 
-const API_URL = "http://localhost:5000/api/posts";
+const API_URL =
+  "https://mint-blog-engine-backend.onrender.com/api/posts";
 
 function calculateReadingTime(text) {
   const words = text.trim().split(/\s+/).length;
